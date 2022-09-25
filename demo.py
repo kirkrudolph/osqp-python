@@ -86,7 +86,8 @@ prob.setup(P, q, A, l, u, warm_start=True)
 
 # Simulate in closed loop
 nsim = 15
-x = x0
+x = x0                      # initial state vector
+u_out = np.zeros((4,1))     # initial control vector
 for i in range(nsim):
     # Solve
     res = prob.solve()
@@ -102,20 +103,64 @@ for i in range(nsim):
     # Store States for plotting
     x = np.append(x,x0)
 
+    # Store Control for plotting
+    u_out = np.append(u_out,ctrl)
+
     # Update initial state
     l[:nx] = -x0
     u[:nx] = -x0
     prob.update(l=l, u=u)
 
 num_states = np.size(x0)    # 12
+num_actuators = np.size(np.zeros((4,1)))
 num_steps = nsim+1          # 16
 
-# Plot all states over all time steps
+# Reshape output data
 x = np.reshape(x,[num_steps,num_states])
+u_out = np.reshape(u_out,[num_steps,num_actuators])
 print(x)
 print(np.shape(x))
-plt.plot(x)
-#plt.show()
+print(np.shape(u_out))
 
-# Generate c-code for embedded?
-prob.codegen('osqp_gen', parameters='matrices')
+# Plot all states over all time steps
+plt.figure(1)
+plt.suptitle('State Vector')
+# Plot Linear positions
+plt.subplot(2,2,1)
+plt.plot(x[0:num_steps,0:3])
+plt.legend(['p_x', 'p_y', 'p_z'])
+plt.xlabel('Time')
+plt.ylabel('Linear Positions [m]')
+# Plot Linear Velocities
+plt.subplot(2,2,2)
+plt.plot(x[0:num_steps,3:6])
+plt.legend(['v_x','v_y','v_z'])
+plt.xlabel('Time')
+plt.ylabel('Linear Velocities [m/s]')
+# Plot Angular Postitions
+plt.subplot(2,2,3)
+plt.plot(x[0:num_steps,6:9])
+plt.legend(['roll','pitch','yaw'])
+plt.xlabel('Time')
+plt.ylabel('Angular Positions [rad]')
+# Plot Angular Velocities
+plt.subplot(2,2,4)
+plt.plot(x[0:num_steps,9:12])
+plt.legend(['roll rate','pitch rate','yaw rate'])
+plt.xlabel('Time')
+plt.ylabel('Angular Velocities [rad/s]')
+# Disaply Plot
+plt.show()
+
+# Plot all actuation over all time steps
+plt.figure(2)
+plt.title('Actuator Vector')
+plt.plot(u_out)
+plt.legend(['u1', 'u2', 'u3','u4'])
+plt.xlabel('Time')
+plt.ylabel('Actuator Effort')
+# Disaply Plot
+plt.show()
+
+# Generate c-code for embedded
+# prob.codegen('osqp_gen', parameters='matrices')
