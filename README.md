@@ -13,11 +13,18 @@ python3 demo.py
 1. Uncomment last line.
 2. Run script
 
-## Simulation Results
+## Simulation Results #1
 
 |![state-vector](images/State_Vector.png)|
 |:--:|
-| Figure 1 - State Vector: |
+| Figure 1: State Vector |
 |![actuator-vector](images/Actuator_Vector.png)|
-| Figure 2 - Actuator Vector: |
+| Figure 2: Actuator Vector |
 
+## Simulation Results #2 (Heavily Actuator Saturated)
+
+|![state-vector](images/State_Vector_2.png)|
+|:--:|
+| Figure 1: State Vector |
+|![actuator-vector](images/Actuator_Vector_2.png)|
+| Figure 2: Actuator Vector: |
