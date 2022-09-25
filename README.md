@@ -12,6 +12,7 @@ python3 demo.py
 ## Generate Embedded MPC Code
 1. Uncomment last line.
 2. Run script
+3. See [kirkrudolph/esp-osqp](https://github.com/kirkrudolph/esp-osqp-demo)
 
 ## Simulation Results #1
 
