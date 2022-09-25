@@ -115,4 +115,7 @@ x = np.reshape(x,[num_steps,num_states])
 print(x)
 print(np.shape(x))
 plt.plot(x)
-plt.show()
+#plt.show()
+
+# Generate c-code for embedded?
+prob.codegen('osqp_gen', parameters='matrices')
