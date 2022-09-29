@@ -15,9 +15,6 @@ Ad = sparse.csc_matrix([
   [1.,      0.,     0., 0., 0., 0., 0.1,     0.,     0.,  0.,     0.,     0.    ], # 1    p_x[k+1] = p_x + .1*v_x
   [0.,      1.,     0., 0., 0., 0., 0.,      0.1,    0.,  0.,     0.,     0.    ], # 2    p_y[k+1] = p_y + .1*v_y
   [0.,      0.,     1., 0., 0., 0., 0.,      0.,     0.1, 0.,     0.,     0.    ], # 3    p_z[k+1] = p_z + .1*v_z
-  [0.0488,  0.,     0., 1., 0., 0., 0.0016,  0.,     0.,  0.0992, 0.,     0.    ], # 4    t_x[k+1] = t_x + .0488*p_x + .0016*v_x + .0992*w_x
-  [0.,     -0.0488, 0., 0., 1., 0., 0.,     -0.0016, 0.,  0.,     0.0992, 0.    ], # 5    t_y[k+1] = t_y - .0488*p_y - .0016*v_y + .0992*w_y
-  [0.,      0.,     0., 0., 0., 1., 0.,      0.,     0.,  0.,     0.,     0.0992], # 6    t_z[k+1] = t_z + .0992*w_z
   [0.,      0.,     0., 0., 0., 0., 1.,      0.,     0.,  0.,     0.,     0.    ], # 7    v_x[k+1] = v_x
   [0.,      0.,     0., 0., 0., 0., 0.,      1.,     0.,  0.,     0.,     0.    ], # 8    v_y[k+1] = v_y
   [0.,      0.,     0., 0., 0., 0., 0.,      0.,     1.,  0.,     0.,     0.    ], # 9    v_z[k+1] = v_z
@@ -30,9 +27,6 @@ Bd = sparse.csc_matrix([
   [0.,      -0.0726,  0.,     0.0726],   # 1    -0.0726*u2 + 0.0726*u4
   [-0.0726,  0.,      0.0726, 0.    ],   # 2    -0.0726*u1 + 0.0726*u3
   [-0.0152,  0.0152, -0.0152, 0.0152],   # 3    -0.0152*u1 + 0.0152*u2 - 0.0152*u3 + 0.0152*u4
-  [-0.,     -0.0006, -0.,     0.0006],   # 4    -0.0006*u2 + 0.0006*u4
-  [0.0006,   0.,     -0.0006, 0.0000],   # 5     0.0006*u1 - 0.0006*u3
-  [0.0106,   0.0106,  0.0106, 0.0106],   # 6     0.0106*u1 + 0.0106*u2 + 0.0106*u3 + 0.0106*u4
   [0,       -1.4512,  0.,     1.4512],   # 7    -1.4512*u1 + 1.4512*u2
   [-1.4512,  0.,      1.4512, 0.    ],   # 8    -1.4512*u1 + 1.4512*u3
   [-0.3049,  0.3049, -0.3049, 0.3049],   # 9    -0.3049*u1 + 0.3049*u2 - 0.3049*u3 + 0.3049*u4
@@ -46,19 +40,34 @@ Bd = sparse.csc_matrix([
 u0 = 10.5916
 umin = np.array([9.6, 9.6, 9.6, 9.6]) - u0
 umax = np.array([13., 13., 13., 13.]) - u0
-xmin = np.array([-np.pi/6,-np.pi/6,-np.inf,-np.inf,-np.inf,-1.,
-                 -np.inf,-np.inf,-np.inf,-np.inf,-np.inf,-np.inf])
-xmax = np.array([ np.pi/6, np.pi/6, np.inf, np.inf, np.inf, np.inf,
-                  np.inf, np.inf, np.inf, np.inf, np.inf, np.inf])
+xmin = np.array([ -np.pi/6,
+                  -np.pi/6,
+                  -np.inf,
+                  -np.inf,
+                  -np.inf,
+                  -np.inf,
+                  -np.inf,
+                  -np.inf,
+                  -np.inf])
+xmax = np.array([ 
+                  np.pi/6, 
+                  np.pi/6, 
+                  np.inf, 
+                  np.inf, 
+                  np.inf, 
+                  np.inf, 
+                  np.inf, 
+                  np.inf, 
+                  np.inf])
 
 # Objective function
-Q = sparse.diags([0., 0., 10., 10., 10., 10., 0., 0., 0., 5., 5., 5.])
+Q = sparse.diags([0., 0., 10., 0., 0., 0., 5., 5., 5.])
 QN = Q
 R = 0.1*sparse.eye(4)
 
 # Initial and reference states
-x0 = np.zeros(12)
-xr = np.array([0.,0.,1.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+x0 = np.zeros(9)
+xr = np.array([0.,0.,1.,0.,0.,0.,0.,0.,0.])
 
 # Prediction horizon
 N = 5
@@ -139,20 +148,14 @@ plt.legend(['$p_x$', '$p_y$', '$p_z$'])
 plt.xlabel('Time')
 plt.ylabel('Linear Positions [m]')
 # Plot Linear Velocities
-plt.subplot(2,2,2)
-plt.plot(x[0:num_steps,3:6])
-plt.legend(['$\phi_x$','$\phi_y$','$\phi_z$'])
-plt.xlabel('Time')
-plt.ylabel('Angular Positions [rad]')
-# Plot Angular Postitions
 plt.subplot(2,2,3)
-plt.plot(x[0:num_steps,6:9])
+plt.plot(x[0:num_steps,3:6])
 plt.legend(['$v_x$','$v_y$','$v_z$'])
 plt.xlabel('Time')
 plt.ylabel('Linear Velocities [m/s]')
 # Plot Angular Velocities
 plt.subplot(2,2,4)
-plt.plot(x[0:num_steps,9:12])
+plt.plot(x[0:num_steps,6:9])
 plt.legend(['$\Phi_x$','$\Phi_y$','$\Phi_z$'])
 plt.xlabel('Time')
 plt.ylabel('Angular Velocities [rad/s]')
