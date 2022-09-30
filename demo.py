@@ -61,7 +61,7 @@ x0 = np.zeros(12)
 xr = np.array([0.,0.,1.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
 
 # Prediction horizon
-N = 5
+N = 30
 
 # Cast MPC problem to a QP: x = (x(0),x(1),...,x(N),u(0),...,u(N-1))
 # - quadratic objective
@@ -118,56 +118,60 @@ for i in range(nsim):
     u[:nx] = -x0
     prob.update(l=l, u=u)
 
-num_states = np.size(x0)    # 12
-num_actuators = np.size(np.zeros((4,1)))
-num_steps = nsim+1          # 16
+PLOT = 0
 
-# Reshape output data
-x = np.reshape(x,[num_steps,num_states])
-u_out = np.reshape(u_out,[num_steps,num_actuators])
-print(x)
-print(np.shape(x))
-print(np.shape(u_out))
+if PLOT:
 
-# Plot all states over all time steps
-plt.figure(1)
-plt.suptitle('State Vector')
-# Plot Linear positions
-plt.subplot(2,2,1)
-plt.plot(x[0:num_steps,0:3])
-plt.legend(['$p_x$', '$p_y$', '$p_z$'])
-plt.xlabel('Time')
-plt.ylabel('Linear Positions [m]')
-# Plot Linear Velocities
-plt.subplot(2,2,2)
-plt.plot(x[0:num_steps,3:6])
-plt.legend(['$\phi_x$','$\phi_y$','$\phi_z$'])
-plt.xlabel('Time')
-plt.ylabel('Angular Positions [rad]')
-# Plot Angular Postitions
-plt.subplot(2,2,3)
-plt.plot(x[0:num_steps,6:9])
-plt.legend(['$v_x$','$v_y$','$v_z$'])
-plt.xlabel('Time')
-plt.ylabel('Linear Velocities [m/s]')
-# Plot Angular Velocities
-plt.subplot(2,2,4)
-plt.plot(x[0:num_steps,9:12])
-plt.legend(['$\Phi_x$','$\Phi_y$','$\Phi_z$'])
-plt.xlabel('Time')
-plt.ylabel('Angular Velocities [rad/s]')
-# Disaply Plot
-plt.show()
+  num_states = np.size(x0)    # 12
+  num_actuators = np.size(np.zeros((4,1)))
+  num_steps = nsim+1          # 16
 
-# Plot all actuation over all time steps
-plt.figure(2)
-plt.title('Actuator Vector')
-plt.plot(u_out)
-plt.legend(['$u_1$', '$u_2$', '$u_3$','$u_4$'])
-plt.xlabel('Time')
-plt.ylabel('Actuator Effort')
-# Disaply Plot
-plt.show()
+  # Reshape output data
+  x = np.reshape(x,[num_steps,num_states])
+  u_out = np.reshape(u_out,[num_steps,num_actuators])
+  print(x)
+  print(np.shape(x))
+  print(np.shape(u_out))
 
+  # Plot all states over all time steps
+  plt.figure(1)
+  plt.suptitle('State Vector')
+  # Plot Linear positions
+  plt.subplot(2,2,1)
+  plt.plot(x[0:num_steps,0:3])
+  plt.legend(['$p_x$', '$p_y$', '$p_z$'])
+  plt.xlabel('Time')
+  plt.ylabel('Linear Positions [m]')
+  # Plot Linear Velocities
+  plt.subplot(2,2,2)
+  plt.plot(x[0:num_steps,3:6])
+  plt.legend(['$\phi_x$','$\phi_y$','$\phi_z$'])
+  plt.xlabel('Time')
+  plt.ylabel('Angular Positions [rad]')
+  # Plot Angular Postitions
+  plt.subplot(2,2,3)
+  plt.plot(x[0:num_steps,6:9])
+  plt.legend(['$v_x$','$v_y$','$v_z$'])
+  plt.xlabel('Time')
+  plt.ylabel('Linear Velocities [m/s]')
+  # Plot Angular Velocities
+  plt.subplot(2,2,4)
+  plt.plot(x[0:num_steps,9:12])
+  plt.legend(['$\Phi_x$','$\Phi_y$','$\Phi_z$'])
+  plt.xlabel('Time')
+  plt.ylabel('Angular Velocities [rad/s]')
+  # Disaply Plot
+  plt.show()
+
+  # Plot all actuation over all time steps
+  plt.figure(2)
+  plt.title('Actuator Vector')
+  plt.plot(u_out)
+  plt.legend(['$u_1$', '$u_2$', '$u_3$','$u_4$'])
+  plt.xlabel('Time')
+  plt.ylabel('Actuator Effort')
+  # Disaply Plot
+  plt.show()
+  
 # Generate c-code for embedded
 #prob.codegen('osqp_gen', parameters='matrices')
