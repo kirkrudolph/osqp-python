@@ -71,7 +71,7 @@ x0 = np.zeros(9)
 xr = np.array([0.,0.,1.,0.,0.,0.,0.,0.,0.])
 
 # Prediction horizon
-N = 30
+N = 10
 
 # Cast MPC problem to a QP: x = (x(0),x(1),...,x(N),u(0),...,u(N-1))
 # - quadratic objective
@@ -104,7 +104,7 @@ prob.setup(P, q, A, l, u, warm_start=True)
 # Simulate in closed loop
 nsim = 15
 x = x0                      # initial state vector
-u_out = np.zeros((3,1))     # initial control vector
+u_out = np.zeros((nu,1))     # initial control vector
 for i in range(nsim):
     # Solve
     res = prob.solve()
@@ -129,7 +129,7 @@ for i in range(nsim):
     prob.update(l=l, u=u)
 # 
 # num_states = np.size(x0)    # 12
-# num_actuators = np.size(np.zeros((4,1)))
+# num_actuators = np.size(np.zeros((nu,1)))
 # num_steps = nsim+1          # 16
 # 
 # # Reshape output data
