@@ -4,7 +4,14 @@
 - Additional code to plot the simulated states and actuation.
 - Additional code to generate c embedded code into the `osqp_gen` folder (disabled by default).
 
+## Install OSQP
+
+```
+pip3 install osqp
+```
+
 ## Run Simulation
+
 ```
 python3 demo.py
 ```
