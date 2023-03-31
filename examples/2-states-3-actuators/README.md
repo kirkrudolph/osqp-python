@@ -23,8 +23,7 @@ python3 demo.py
 ## Results
 
 |       ![Closed-Loop](./images/Horizon_10.png)       |
+|:--:|
 |  Figure 1: Closed loop simulation (horizon = 10)    |
-
-
 |      ![Closed-Loop](./images/Horizon_100.png)       |
 |  Figure 2: Closed loop simulation (horizon = 100)   |
